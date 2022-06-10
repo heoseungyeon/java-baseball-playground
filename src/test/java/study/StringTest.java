@@ -24,4 +24,10 @@ public class StringTest {
     assertThat(actual).containsOnly("1");
   }
 
+  @Test
+  void subString() {
+    String actual = "(1,2)".substring(1, 4);
+    assertThat(actual).isEqualTo("1,2");
+  }
+
 }
