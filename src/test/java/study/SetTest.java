@@ -1,8 +1,6 @@
 package study;
 
-
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -42,7 +40,7 @@ public class SetTest {
   @ParameterizedTest
   @ValueSource(ints = {1, 2, 3})
   void contains_ShouldReturnTrueAllCase(int number) {
-    assertTrue(numbers.contains(number));
+    assertThat(numbers.contains(number)).isTrue();
   }
 
   @ParameterizedTest

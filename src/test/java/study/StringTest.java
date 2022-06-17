@@ -52,7 +52,5 @@ public class StringTest {
       testString.charAt(testString.length());
     }).isInstanceOf(StringIndexOutOfBoundsException.class)
         .hasMessageContaining("String index out of range: ");
-
   }
-
 }
