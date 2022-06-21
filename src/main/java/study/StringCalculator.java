@@ -1,33 +1,42 @@
 package study;
 
+import java.util.Arrays;
+import study.exception.ErrorMessage;
+import study.exception.NotFoundException;
+
 public class StringCalculator implements Calculator {
 
   @Override
   public float calculate(String expression) {
-    String[] values = expression.split(" ");
+    String[] splitedExpressionArgs = splitExpression(expression);
 
-    float result = Integer.parseInt(values[0]);
-    for (int i = 1; i < values.length; i += 2) {
-      result = calculate(values[i], result, Integer.parseInt(values[i + 1]));
+    return accumulateByExpressionArgs(splitedExpressionArgs);
+  }
+
+  public float accumulateByExpressionArgs(String[] splitedExpressionArgs) {
+    final int FIRST_OPERATOR_IDX = 1;
+    final int OPERATOR_IDX_GAP = 2;
+    float result = Float.parseFloat(splitedExpressionArgs[0]);
+
+    for (int i = FIRST_OPERATOR_IDX; i < splitedExpressionArgs.length; i += OPERATOR_IDX_GAP) {
+      String operator = splitedExpressionArgs[i];
+      float preOperand = result;
+      float postOperand = Float.parseFloat(splitedExpressionArgs[i + 1]);
+      result = calculateByOperator(operator, preOperand, postOperand);
     }
 
     return result;
   }
 
-  public float calculate(String operator, float preOperand, float postOperand) {
-    if (operator.equals("*")) {
-      return preOperand * postOperand;
-    }
-    if (operator.equals("+")) {
-      return preOperand + postOperand;
-    }
-    if (operator.equals("-")) {
-      return preOperand - postOperand;
-    }
-    if (operator.equals("/")) {
-      return preOperand / postOperand;
-    }
+  public float calculateByOperator(String operator, float preOperand, float postOperand) {
+    return Arrays.stream(Operator.values())
+        .filter(op -> operator.equals(op.getOperator()))
+        .findFirst()
+        .map(op -> op.getCalculationResult(preOperand, postOperand))
+        .orElseThrow(() -> new NotFoundException(ErrorMessage.OPERATOR_NOT_FOUNDED, operator));
+  }
 
-    return Float.MAX_VALUE;
+  private String[] splitExpression(String expression) {
+    return expression.split(" ");
   }
 }
